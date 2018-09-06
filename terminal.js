@@ -1,47 +1,24 @@
-/* This code is based off code by Atul Bhats, you can see the original at http://atulbhats.com/terminal */
-/* However there are a lot of changes and cleanups to make this work with wordpress with dynamic commands */
-/* Allowing you to hopefully use Wordpress as you feel like it and this should dynamically work with it */
-/* TODO: Remove all traces of JQuery as it'd be one less dependency */
-/* TODO: Theming? */
-/* TODO: Setup posts to be a directory */
-/* Maybe make this DOS themed? */
-
 var $history = new Array();
 
 var $startup = [
-  'Starting SD-DOS...',
-  '',
-  'This driver provided by Oak Technology. Inc..',
-  'OTI-91X ATAPI CD-ROM device driver, Rev D91XV352',
-  '(C)Copyright Oak Technology Inc. 1987-1997',
-  '  Device Name        : MSCD0001',
-  '  Transfer Mode      : Programmed I/O',
-  '  Number of drives   : 1',
-  '',
-  'MSCDEX Version 2.23',
-  'Copyright (C) Microsoft Corp. 1986-1993. All rights reserved.',
-  '       Drive D: = Driver MSCD0001 unit 0',
-  '',
-  'CPUidle for DOS V2.10  [Build 0077]',
-  'Copyright (C) by Marton Balog, 1998.',
-  '',
-  'DETECTING...',
-  '[Processor]:    Unknown Intel.',
-  '[Power/Man]:    APM V1.2 [Enabled].',
-  '[Op/System]:    SD-DOS V6.22 [Standard].',
-  '[32-bit mode]:  32-bit VCPI interface.',
-  '',
-  'DOSidle installed successfully.',
+  'Starting Matt Shore (MS)-DOS...',
+  '...', 
+	'Welcome to mattshore.co.uk, please feel free to say hi!',
+	'If you need any help... just type help. d(-_-)b ',
+	'Enjoy', 
   ''
 ];
 
 var $commands = [
   {cmd: 'help',   hidden: false,    type: 'function',   output: show_help,              help: 'Lists all available commands'},
   {cmd: 'cls',    hidden: false,    type: 'function',   output: clear_screen,           help: 'Clear the screen'},
-  {cmd: 'dir',    hidden: false,    type: 'print',      output: '',                     help: 'Show directories or files in current directory'},
+  {cmd: 'dir',    hidden: false,    type: 'print',      output: 'About.pdf',                     help: 'Show directories or files in current directory'},
   {cmd: 'date',   hidden: false,    type: 'function',   output: show_date,              help: 'Display the current date and time'},
-  {cmd: 'type',   hidden: false,    type: 'print',      output: '',                     help: 'Display a given file'},
-  {cmd: 'xyzzy',  hidden: true,     type: 'print',      output: 'Nothing happens',      help: 'Nothing happens'}
+  {cmd: 'about',   hidden: false,    type: 'print',      output: "I'm Matt Shore, I take your business strategy and align technology to meet its goals.",                     help: 'Learn a little about me'},
+  {cmd: 'skills',   hidden: false,    type: 'print',      output: "<b>Technical</b><br>VMWare, Veeam, Docker, Networking, Security, Microsoft Server & Desktop, SQL, Exchange/ Oﬃce 365, Sharepoint, CRM, SAP, Linux, Mac. Desktop Applications, LAMP, Cloud, Data Centre, Remote Monitoring and Proactive Support, Infrastructure – Server, Storage, Network<p><b>Commercial</b><br>Negotiation, Strategy, Planning, Automation, Process, ITIL, Business Continuity, Pricing Strategy, Go To Market Strategy, Presenting, GDPR",                     help: 'list some of my skills'},
+  {cmd: 'hi',     hidden: false,     type: 'function',      output: show_hi,               help: 'Why not say hi! Your here anyway'},
+  {cmd: 'quote',   hidden: false,     type: 'function',  output: quote,                   help: 'Quote of the day...'},
+  {cmd: 'cd',    hidden: false,    type: 'print',      output: 'Permission Denied',                     help: 'Change Directory'}
 ];
 
 function hidedefault() {
@@ -86,7 +63,7 @@ function show_help(parameters) {
     for (var i = 0; i < $commands.length; i ++) {
       cmd = $commands[i];
       if (cmd.hidden == false) {
-        print += cmd.cmd + "&#09;";
+        print += cmd.cmd + ' - ' + cmd.help + "&#09;<br>";
       }
     }
     return print;
@@ -101,6 +78,23 @@ function show_help(parameters) {
   }
 
   return "No help found for this command";
+}
+
+function show_hi(parameters) {
+  var $sayhi = 
+    '<br>' +
+    '#####################################################################<br>' +
+    '#################     #####     #####     ####### WELCOME ###########<br>' +
+    '#################     #####     #####     ########## TO #############<br>' +
+    '#################     #####     ################ MATT SHORES ########<br>' +
+    '#################               #####     #######  WEBSITE ##########<br>' +
+    '#################     #####     #####     ###########################<br>' +
+    '#################     #####     #####     ###########################<br>' +
+    '#################     #####     #####     ###########################<br>' +
+    '#####################################################################<br>' +
+    '<br>'
+;
+  return $sayhi;
 }
 
 function format_date(date) {
@@ -122,6 +116,18 @@ function show_date(parameters) {
   return "Current date is " + format_date(date);
 }
 
+function quote() {
+  var quotes = new Array();
+  quotes[0] = "You are who you are and you are someone else...";
+  quotes[1] = "Just because you've got it, you don't have to flaunt it with a endless string of famous men...";
+  quotes[2] = "Rings round his eyes, tracks down his arms, his fans are confused and his friends are alarmed...";
+  quotes[3] = "Someone might try and burn it down and you will have to put the fire out...";
+  quotes[4] = "The mind and the brain are not quite the same but they both want out of this place...";
+  var rand = Math.floor(Math.random()*quotes.length);
+  return quotes[rand];
+
+}
+
 function outputText(outputText) {
   $('#defaultline').before('<div class="line" id="line'+$line+'"></div>');
   $('#line'+$line).html(outputText.replace(/ /g, '&nbsp;'));
@@ -129,7 +135,7 @@ function outputText(outputText) {
   $('#actualinput').val("");
   $line++;
   $('#actualinput').focus();
-  $(document).scrollTop($(document).height());
+    $('#terminal').scrollTop($('#terminal')[0].scrollHeight);
 }
 
 function runcommand($command) {
@@ -301,8 +307,8 @@ $(document).ready(function() {
     }
   });
 
-  $('body').click(function(){
-    $('body').scrollTop($(window).height());
+  $('#actualinput').click(function(){
+    $('#actualinput').scrollTop($('#actualinput').height());
   });
 
   $(document).on("tap", function(e) {
