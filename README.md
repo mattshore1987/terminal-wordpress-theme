@@ -1,6 +1,6 @@
 # terminal-wordpress-theme
-CLI Terminal Theme for Wordpress
+An updated version of the great work @shockdesign has done. His original version is here:  https://thispageisblank.net/ shows off what this can do.
 
-There is still so much to do here in regards to this.
+<b>Matt Shore (MS) DOS v1. </b>
 
-However https://thispageisblank.net/ shows off what this can do.
+<img src="https://www.mattshore.co.uk/wp-content/uploads/2018/09/Screen-Shot-2018-09-06-at-21.36.00.png">
